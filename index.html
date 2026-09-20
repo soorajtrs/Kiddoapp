@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Kutty Padam - Malayalam for Kids</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@500;700&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HOME SCREEN -->
+  <section id="screen-home" class="screen active">
+    <header class="home-header">
+      <h1><span class="emoji">🧒</span> കുട്ടി പഠനം <span class="sub">Kutty Padam</span></h1>
+      <p class="tagline">Learn Malayalam &amp; Play!</p>
+    </header>
+    <nav class="menu-grid">
+      <button class="menu-card" data-target="screen-letters" style="--card-color:#FF6B6B">
+        <span class="menu-emoji">🔤</span><span>അക്ഷരങ്ങൾ<br>Letters</span>
+      </button>
+      <button class="menu-card" data-target="screen-words" style="--card-color:#4ECDC4">
+        <span class="menu-emoji">📚</span><span>വാക്കുകൾ<br>Words</span>
+      </button>
+      <button class="menu-card" data-target="screen-videos" style="--card-color:#FFD93D">
+        <span class="menu-emoji">📺</span><span>വീഡിയോ<br>Videos</span>
+      </button>
+      <button class="menu-card" data-target="screen-puzzle" style="--card-color:#A78BFA">
+        <span class="menu-emoji">🧩</span><span>പസിൽ<br>Puzzle</span>
+      </button>
+      <button class="menu-card" data-target="screen-draw" style="--card-color:#6BCB77">
+        <span class="menu-emoji">🎨</span><span>വരയ്ക്കാം<br>Draw</span>
+      </button>
+      <button class="menu-card" data-target="screen-read" style="--card-color:#FF8FAB">
+        <span class="menu-emoji">📖</span><span>വായിക്കാം<br>Read</span>
+      </button>
+    </nav>
+  </section>
+
+  <!-- LETTERS SCREEN -->
+  <section id="screen-letters" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>അക്ഷരങ്ങൾ — Letters</h2>
+    </header>
+    <div class="tabs" id="letter-tabs"></div>
+    <div class="letter-stage">
+      <button id="letter-display" class="big-letter" aria-label="Tap to hear the sound"></button>
+      <div class="letter-info">
+        <div id="letter-translit" class="translit"></div>
+        <div id="letter-word" class="example-word"></div>
+      </div>
+      <div class="stage-nav">
+        <button id="letter-prev" class="round-btn">⬅</button>
+        <button id="letter-say" class="round-btn say-btn">🔊 Say it!</button>
+        <button id="letter-next" class="round-btn">➡</button>
+      </div>
+    </div>
+    <div class="letter-grid" id="letter-grid"></div>
+  </section>
+
+  <!-- WORDS SCREEN -->
+  <section id="screen-words" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>വാക്കുകൾ — Words</h2>
+    </header>
+    <div class="tabs" id="word-tabs"></div>
+    <div class="word-grid" id="word-grid"></div>
+  </section>
+
+  <!-- VIDEOS SCREEN -->
+  <section id="screen-videos" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>വീഡിയോ — Videos</h2>
+    </header>
+    <div id="video-list" class="video-list"></div>
+    <div id="video-player-wrap" class="video-player-wrap hidden">
+      <button class="back-btn small" id="video-back">⬅ All Videos</button>
+      <div class="video-frame-guard">
+        <div id="yt-player"></div>
+        <div class="video-shield" id="video-shield" title="Playback controlled here"></div>
+      </div>
+      <div class="custom-controls">
+        <button id="video-playpause" class="round-btn say-btn">▶ Play</button>
+        <div class="progress-track"><div id="video-progress" class="progress-fill"></div></div>
+        <span id="video-time" class="video-time">0:00 / 0:00</span>
+      </div>
+      <p class="note">No skipping ahead — watch the whole video! 🙂</p>
+    </div>
+  </section>
+
+  <!-- PUZZLE SCREEN -->
+  <section id="screen-puzzle" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>പസിൽ — Memory Match</h2>
+    </header>
+    <div class="puzzle-controls">
+      <button class="chip-btn" data-size="4">Easy (4)</button>
+      <button class="chip-btn" data-size="6">Medium (6)</button>
+      <button class="chip-btn" data-size="8">Hard (8)</button>
+      <span id="puzzle-status" class="puzzle-status"></span>
+    </div>
+    <div id="puzzle-board" class="puzzle-board"></div>
+    <div id="puzzle-win" class="puzzle-win hidden">🎉 You did it! 🎉<br><button id="puzzle-again" class="round-btn say-btn">Play Again</button></div>
+  </section>
+
+  <!-- DRAW SCREEN -->
+  <section id="screen-draw" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>വരയ്ക്കാം — Draw</h2>
+    </header>
+    <div class="draw-toolbar">
+      <div id="color-swatches" class="color-swatches"></div>
+      <input type="range" id="brush-size" min="2" max="40" value="10">
+      <button id="draw-erase" class="chip-btn">🧽 Eraser</button>
+      <button id="draw-clear" class="chip-btn">🗑 Clear</button>
+      <button id="draw-save" class="chip-btn">💾 Save</button>
+    </div>
+    <canvas id="draw-canvas" class="draw-canvas"></canvas>
+  </section>
+
+  <!-- READ SCREEN -->
+  <section id="screen-read" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>വായിക്കാം — Story Time</h2>
+    </header>
+    <div class="story-tabs" id="story-tabs"></div>
+    <div class="story-page">
+      <div id="story-emoji" class="story-emoji"></div>
+      <div id="story-mal" class="story-mal"></div>
+      <div id="story-en" class="story-en"></div>
+      <div class="stage-nav">
+        <button id="story-prev" class="round-btn">⬅</button>
+        <button id="story-say" class="round-btn say-btn">🔊 Read to me</button>
+        <button id="story-next" class="round-btn">➡</button>
+      </div>
+      <div id="story-page-dots" class="page-dots"></div>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/letters.js"></script>
+<script src="js/words.js"></script>
+<script src="js/videos.js"></script>
+<script src="js/puzzle.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/read.js"></script>
+</body>
+</html>
