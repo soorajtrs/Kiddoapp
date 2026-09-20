@@ -22,14 +22,19 @@
     grid.innerHTML = '';
     SHOW_CATEGORIES[currentCat].forEach(s => {
       const url = s.platform === 'netflix' ? netflixSearch(s.title) : primeSearch(s.title);
-      const label = s.platform === 'netflix' ? '▶ Open in Netflix' : '▶ Open in Prime Video';
+      const platformLabel = s.platform === 'netflix' ? 'Netflix' : 'Prime Video';
       const badgeColor = s.platform === 'netflix' ? '#E50914' : '#00A8E1';
-      const card = document.createElement('div');
+      const card = document.createElement('a');
       card.className = 'video-thumb show-card';
+      card.href = url;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
       card.innerHTML = `
-        <div class="show-emoji" style="background:${badgeColor}22">${s.emoji}</div>
+        <div class="show-thumb" style="background:linear-gradient(135deg, ${badgeColor}33, ${badgeColor}11)">
+          <span class="show-thumb-emoji">${s.emoji}</span>
+          <span class="show-platform-badge" style="background:${badgeColor}">${platformLabel}</span>
+        </div>
         <span class="v-title">${s.title}</span>
-        <a class="show-link" style="background:${badgeColor}" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>
       `;
       grid.appendChild(card);
     });

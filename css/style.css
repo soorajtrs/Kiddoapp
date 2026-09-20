@@ -196,24 +196,22 @@ html, body {
 
 /* SHOWS */
 .shows-note { color: #777; font-size: .9rem; margin: 0 0 14px; line-height: 1.4; }
-.show-card { display: flex; flex-direction: column; align-items: stretch; padding: 12px; cursor: default; }
-.show-emoji {
-  font-size: 2.6rem;
+.show-card { display: block; text-decoration: none; color: inherit; }
+.show-thumb {
+  position: relative;
   aspect-ratio: 16/9;
   display: flex; align-items: center; justify-content: center;
-  border-radius: 14px;
-  margin-bottom: 8px;
 }
-.show-link {
-  display: block;
-  text-align: center;
+.show-thumb-emoji { font-size: 2.8rem; }
+.show-platform-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
   color: white;
-  text-decoration: none;
   font-weight: 700;
-  font-size: .85rem;
-  padding: 8px 6px;
-  border-radius: 10px;
-  margin-top: 8px;
+  font-size: .68rem;
+  padding: 3px 8px;
+  border-radius: 8px;
 }
 
 /* WORDS */
