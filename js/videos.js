@@ -3,7 +3,11 @@
   let ytReady = false;
   let maxWatched = 0;
   let pollTimer = null;
-  const TOLERANCE = 1.5; // seconds of slack before we call it a "skip"
+  let lastTick = null;
+  let watchedSeconds = 0;
+  let unlocked = false;
+  const TOLERANCE = 1.5;       // seconds of slack before we call it a "skip"
+  const LOCK_SECONDS = 15 * 60; // suggestions stay hidden for 15 min of watching
 
   function loadYouTubeAPI() {
     if (window.YT && window.YT.Player) { ytReady = true; return; }
@@ -25,16 +29,22 @@
         <img loading="lazy" src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt="${v.title}">
         <span class="v-title">${v.title}</span>
       `;
-      card.addEventListener('click', () => playVideo(v));
+      card.addEventListener('click', () => {
+        if (document.getElementById('video-player-wrap').classList.contains('hidden')) {
+          playVideo(v);
+        }
+      });
       list.appendChild(card);
     });
   }
 
   function playVideo(v) {
-    document.getElementById('video-list').parentElement; // no-op, keeps list in DOM
     document.querySelector('#screen-videos .video-list').classList.add('hidden');
     document.getElementById('video-player-wrap').classList.remove('hidden');
     maxWatched = 0;
+    watchedSeconds = 0;
+    lastTick = null;
+    lockSuggestions();
 
     const start = () => {
       if (ytPlayer) {
@@ -74,14 +84,19 @@
     } else if (e.data === YT.PlayerState.ENDED) {
       btn.textContent = '▶ Play';
       stopGuard();
+      unlockSuggestions(); // a video that ends naturally always unlocks, even if short
     }
   }
 
   // Poll playback position; if it jumps forward past what's been watched
   // (a scrub, a keyboard seek, anything) snap it back. This is what
   // blocks "skipping ahead" - kids can only watch straight through.
+  // The same tick also accumulates real watched time toward the 15-minute
+  // lock, so the "Show suggestions" button stays hidden/disabled until a
+  // kid has actually watched (not skipped through) 15 minutes.
   function startGuard() {
     stopGuard();
+    lastTick = performance.now();
     pollTimer = setInterval(() => {
       if (!ytPlayer || typeof ytPlayer.getCurrentTime !== 'function') return;
       const t = ytPlayer.getCurrentTime();
@@ -91,6 +106,14 @@
       } else {
         maxWatched = Math.max(maxWatched, t);
       }
+
+      const now = performance.now();
+      if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING && lastTick) {
+        watchedSeconds += (now - lastTick) / 1000;
+      }
+      lastTick = now;
+      updateLockUi();
+
       const pct = dur ? Math.min(100, (t / dur) * 100) : 0;
       document.getElementById('video-progress').style.width = pct + '%';
       document.getElementById('video-time').textContent = `${fmt(t)} / ${fmt(dur)}`;
@@ -100,6 +123,29 @@
   function stopGuard() {
     if (pollTimer) clearInterval(pollTimer);
     pollTimer = null;
+  }
+
+  function lockSuggestions() {
+    unlocked = false;
+    updateLockUi();
+  }
+
+  function unlockSuggestions() {
+    if (unlocked) return;
+    unlocked = true;
+    const backBtn = document.getElementById('video-back');
+    backBtn.disabled = false;
+    backBtn.textContent = '⬅ All Videos';
+  }
+
+  function updateLockUi() {
+    if (unlocked) return;
+    if (watchedSeconds >= LOCK_SECONDS) {
+      unlockSuggestions();
+      return;
+    }
+    const remaining = Math.ceil(LOCK_SECONDS - watchedSeconds);
+    document.getElementById('video-lock-timer').textContent = fmt(remaining);
   }
 
   function fmt(s) {
@@ -117,6 +163,7 @@
   });
 
   document.getElementById('video-back').addEventListener('click', () => {
+    if (!unlocked) return; // still locked - button is disabled but guard the handler too
     document.getElementById('video-player-wrap').classList.add('hidden');
     document.querySelector('#screen-videos .video-list').classList.remove('hidden');
     if (ytPlayer) ytPlayer.pauseVideo();

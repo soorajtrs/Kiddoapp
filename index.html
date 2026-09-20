@@ -20,13 +20,19 @@
     </header>
     <nav class="menu-grid">
       <button class="menu-card" data-target="screen-letters" style="--card-color:#FF6B6B">
-        <span class="menu-emoji">🔤</span><span>അക്ഷരങ്ങൾ<br>Letters</span>
+        <span class="menu-emoji">🔤</span><span>അക്ഷരങ്ങൾ<br>Malayalam Letters</span>
+      </button>
+      <button class="menu-card" data-target="screen-english" style="--card-color:#3DB6E0">
+        <span class="menu-emoji">🅰️</span><span>English Letters<br><small>Learn to write!</small></span>
       </button>
       <button class="menu-card" data-target="screen-words" style="--card-color:#4ECDC4">
         <span class="menu-emoji">📚</span><span>വാക്കുകൾ<br>Words</span>
       </button>
       <button class="menu-card" data-target="screen-videos" style="--card-color:#FFD93D">
         <span class="menu-emoji">📺</span><span>വീഡിയോ<br>Videos</span>
+      </button>
+      <button class="menu-card" data-target="screen-shows" style="--card-color:#E50914">
+        <span class="menu-emoji">🎬</span><span>Movies &amp; Shows</span>
       </button>
       <button class="menu-card" data-target="screen-puzzle" style="--card-color:#A78BFA">
         <span class="menu-emoji">🧩</span><span>പസിൽ<br>Puzzle</span>
@@ -62,6 +68,36 @@
     <div class="letter-grid" id="letter-grid"></div>
   </section>
 
+  <!-- ENGLISH LETTERS SCREEN -->
+  <section id="screen-english" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>English Letters</h2>
+    </header>
+    <div class="tabs" id="english-tabs"></div>
+    <div class="letter-stage">
+      <button id="english-display" class="big-letter"></button>
+      <div class="letter-info">
+        <div id="english-word" class="example-word"></div>
+      </div>
+      <div class="stage-nav">
+        <button id="english-prev" class="round-btn">⬅</button>
+        <button id="english-say" class="round-btn say-btn">🔊 Say it!</button>
+        <button id="english-next" class="round-btn">➡</button>
+      </div>
+    </div>
+    <div class="letter-grid" id="english-grid"></div>
+
+    <h3 class="trace-heading">✍️ Trace the letter</h3>
+    <div class="trace-toolbar">
+      <button id="trace-clear" class="chip-btn">🗑 Clear</button>
+    </div>
+    <div class="trace-wrap">
+      <div id="trace-guide" class="trace-guide"></div>
+      <canvas id="trace-canvas" class="trace-canvas"></canvas>
+    </div>
+  </section>
+
   <!-- WORDS SCREEN -->
   <section id="screen-words" class="screen">
     <header class="bar">
@@ -80,7 +116,7 @@
     </header>
     <div id="video-list" class="video-list"></div>
     <div id="video-player-wrap" class="video-player-wrap hidden">
-      <button class="back-btn small" id="video-back">⬅ All Videos</button>
+      <button class="back-btn small" id="video-back" disabled>🔒 More videos in <span id="video-lock-timer">15:00</span></button>
       <div class="video-frame-guard">
         <div id="yt-player"></div>
         <div class="video-shield" id="video-shield" title="Playback controlled here"></div>
@@ -92,6 +128,21 @@
       </div>
       <p class="note">No skipping ahead — watch the whole video! 🙂</p>
     </div>
+  </section>
+
+  <!-- MOVIES & SHOWS SCREEN -->
+  <section id="screen-shows" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>Movies &amp; Shows</h2>
+    </header>
+    <p class="shows-note">
+      These open Netflix or Prime Video in a new tab, where you sign in yourself —
+      this app never sees or stores your login. Pick a show together, then hand
+      the screen to your kid. 👨‍👩‍👧
+    </p>
+    <div class="tabs" id="shows-tabs"></div>
+    <div class="video-list" id="shows-grid"></div>
   </section>
 
   <!-- PUZZLE SCREEN -->
@@ -151,8 +202,10 @@
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
 <script src="js/letters.js"></script>
+<script src="js/english.js"></script>
 <script src="js/words.js"></script>
 <script src="js/videos.js"></script>
+<script src="js/shows.js"></script>
 <script src="js/puzzle.js"></script>
 <script src="js/draw.js"></script>
 <script src="js/read.js"></script>

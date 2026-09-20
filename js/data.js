@@ -51,6 +51,24 @@ const LETTER_GROUPS = {
   ],
 };
 
+// English alphabet - spoken English comes first for a 4-year-old, so this
+// section focuses on connecting the letter shape + sound to writing it.
+const ENGLISH_LETTERS = {
+  "Uppercase": "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(ch => ({ ch, word: exampleWord(ch) })),
+  "Lowercase": "abcdefghijklmnopqrstuvwxyz".split("").map(ch => ({ ch, word: exampleWord(ch.toUpperCase()) })),
+};
+
+function exampleWord(upper) {
+  const words = {
+    A: "🍎 Apple", B: "🎈 Balloon", C: "🐱 Cat", D: "🐶 Dog", E: "🥚 Egg",
+    F: "🐟 Fish", G: "🍇 Grapes", H: "🏠 House", I: "🍦 Ice cream", J: "🧃 Juice",
+    K: "🪁 Kite", L: "🦁 Lion", M: "🌙 Moon", N: "👃 Nose", O: "🍊 Orange",
+    P: "🐷 Pig", Q: "👑 Queen", R: "🌈 Rainbow", S: "☀️ Sun", T: "🌳 Tree",
+    U: "☂️ Umbrella", V: "🚐 Van", W: "🕐 Watch", X: "📦 Box (x)", Y: "🪀 Yo-yo", Z: "🦓 Zebra",
+  };
+  return words[upper] || "";
+}
+
 const WORD_CATEGORIES = {
   "Animals": [
     { emoji: "🐘", mal: "ആന", translit: "aana", en: "Elephant" },
@@ -106,6 +124,38 @@ const VIDEOS = [
   { id: "3mG34YXaSbM", title: "Malayalam Alphabets & Words" },
   { id: "4Bie_8QkOEs", title: "Malayalam Alphabet Song" },
 ];
+
+// Curated kid-appropriate titles. Each links out to a Netflix/Prime Video
+// *search* page for that title (not a guessed catalog ID) - the parent
+// signs in there themselves; this app never touches Netflix/Prime credentials.
+function netflixSearch(title) {
+  return `https://www.netflix.com/search?q=${encodeURIComponent(title)}`;
+}
+function primeSearch(title) {
+  return `https://www.amazon.com/s?k=${encodeURIComponent(title)}&i=instant-video`;
+}
+
+const SHOW_CATEGORIES = {
+  "Shows for age 4": [
+    { title: "Bluey", emoji: "🐶", platform: "netflix" },
+    { title: "CoComelon", emoji: "🚜", platform: "netflix" },
+    { title: "Peppa Pig", emoji: "🐷", platform: "netflix" },
+    { title: "Ada Twist, Scientist", emoji: "🔬", platform: "netflix" },
+    { title: "Gabby's Dollhouse", emoji: "🏠", platform: "netflix" },
+    { title: "Word Party", emoji: "🎉", platform: "netflix" },
+  ],
+  "Prime Video picks": [
+    { title: "Pete the Cat", emoji: "🐱", platform: "prime" },
+    { title: "Dinotrux", emoji: "🦕", platform: "prime" },
+    { title: "Wishenpoof", emoji: "✨", platform: "prime" },
+    { title: "The Stinky and Dirty Show", emoji: "🚚", platform: "prime" },
+  ],
+  "Malayalam & Indian": [
+    { title: "Chhota Bheem", emoji: "💪", platform: "prime" },
+    { title: "Motu Patlu", emoji: "😄", platform: "prime" },
+    { title: "Mighty Little Bheem", emoji: "👶", platform: "netflix" },
+  ],
+};
 
 const STORIES = [
   {
