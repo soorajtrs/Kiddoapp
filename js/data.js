@@ -20,6 +20,9 @@ const PROFILES = {
   },
 };
 
+// Complete traditional Malayalam chart: 15 swaram (vowels, including
+// anusvara/visarga) + 36 vyanjanam (consonants, all five vargas plus the
+// semi-vowels, sibilants, and the three Dravidian-only letters ള/ഴ/റ).
 const LETTER_GROUPS = {
   "Vowels": [
     { ch: "അ", translit: "a", word: "അമ്മ (amma) - Mother" },
@@ -28,10 +31,15 @@ const LETTER_GROUPS = {
     { ch: "ഈ", translit: "ee", word: "ഈച്ച (eecha) - Fly" },
     { ch: "ഉ", translit: "u", word: "ഉറുമ്പ് (urumbu) - Ant" },
     { ch: "ഊ", translit: "oo", word: "ഊഞ്ഞാൽ (oonjaal) - Swing" },
+    { ch: "ഋ", translit: "ru", word: "ഋഷി (rishi) - Sage" },
     { ch: "എ", translit: "e", word: "എലി (eli) - Mouse" },
     { ch: "ഏ", translit: "ae", word: "ഏണി (aeni) - Ladder" },
+    { ch: "ഐ", translit: "ai", word: "ഐസ് (ice) - Ice" },
     { ch: "ഒ", translit: "o", word: "ഒട്ടകം (ottakam) - Camel" },
     { ch: "ഓ", translit: "oa", word: "ഓണം (onam) - Onam" },
+    { ch: "ഔ", translit: "au", word: "ഔഷധം (aushadham) - Medicine" },
+    { ch: "അം", translit: "am", word: "അംശം (amsham) - Part" },
+    { ch: "അഃ", translit: "aha", word: "ദുഃഖം (dukham) - Sorrow" },
   ],
   "Consonants 1": [
     { ch: "ക", translit: "ka", word: "കടല്‍ (kadal) - Sea" },
@@ -49,25 +57,33 @@ const LETTER_GROUPS = {
     { ch: "ട", translit: "ta", word: "മുട്ട (mutta) - Egg" },
     { ch: "ഠ", translit: "tta", word: "ഠപ്പ് (thapp)" },
     { ch: "ഡ", translit: "da", word: "ഡ്രം (drum) - Drum" },
+    { ch: "ഢ", translit: "dda", word: "മൂഢൻ (moodhan) - Fool" },
     { ch: "ണ", translit: "na", word: "പണം (panam) - Money" },
     { ch: "ത", translit: "tha", word: "തേൻ (then) - Honey" },
+    { ch: "ഥ", translit: "tha", word: "കഥ (katha) - Story" },
     { ch: "ദ", translit: "dha", word: "ദൂരം (dooram) - Distance" },
+    { ch: "ധ", translit: "dha", word: "ധനം (dhanam) - Wealth" },
     { ch: "ന", translit: "na", word: "നായ (naaya) - Dog" },
+  ],
+  "Consonants 3": [
     { ch: "പ", translit: "pa", word: "പൂവ് (poovu) - Flower" },
     { ch: "ഫ", translit: "pha", word: "ഫലം (phalam) - Fruit" },
     { ch: "ബ", translit: "ba", word: "ബലൂൺ (balloon)" },
-  ],
-  "Consonants 3": [
     { ch: "ഭ", translit: "bha", word: "ഭവനം (bhavanam) - House" },
     { ch: "മ", translit: "ma", word: "മീൻ (meen) - Fish" },
     { ch: "യ", translit: "ya", word: "യന്ത്രം (yanthram) - Machine" },
     { ch: "ര", translit: "ra", word: "രാജാവ് (rajavu) - King" },
     { ch: "ല", translit: "la", word: "ലഡു (laddu) - Sweet" },
     { ch: "വ", translit: "va", word: "വീട് (veedu) - House" },
+  ],
+  "Consonants 4": [
     { ch: "ശ", translit: "sha", word: "ശലഭം (shalabham) - Butterfly" },
     { ch: "ഷ", translit: "sha", word: "ഷഡ്ഭുജം (shadbhujam) - Hexagon" },
     { ch: "സ", translit: "sa", word: "സൂര്യൻ (sooryan) - Sun" },
     { ch: "ഹ", translit: "ha", word: "ഹംസം (hamsam) - Swan" },
+    { ch: "ള", translit: "la", word: "പുളി (puli) - Tamarind" },
+    { ch: "ഴ", translit: "zha", word: "പഴം (pazham) - Banana" },
+    { ch: "റ", translit: "rra", word: "കാറ് (kaar) - Car" },
   ],
 };
 
