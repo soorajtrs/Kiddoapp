@@ -174,7 +174,20 @@
         return;
       }
       setHint('What would you like to do?');
-      startListening();
+      askThenListen();
+    }
+
+    // Speaks the prompt out loud first, then starts listening once the
+    // question has actually finished playing - so it reads as the teddy
+    // bear asking, not a silent popup that happens to be listening.
+    function askThenListen() {
+      if (!('speechSynthesis' in window)) { startListening(); return; }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance('What would you like to do?');
+      utter.rate = 0.9;
+      utter.onend = startListening;
+      utter.onerror = startListening;
+      window.speechSynthesis.speak(utter);
     }
 
     fab.addEventListener('click', openModal);
