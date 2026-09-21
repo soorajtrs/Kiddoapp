@@ -38,6 +38,8 @@ function applyProfileTheme(id) {
   document.documentElement.style.setProperty('--accent2', profile.accent2);
   document.documentElement.style.setProperty('--bg', profile.bg);
   renderDecor(profile);
+  const mascot = document.getElementById('home-mascot');
+  if (mascot) mascot.textContent = profile.emoji;
   const picker = document.getElementById('profile-picker');
   if (picker) {
     picker.querySelectorAll('.profile-btn').forEach(b =>
