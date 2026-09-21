@@ -1,5 +1,28 @@
 (function () {
   let currentCat = Object.keys(SHOW_CATEGORIES)[0];
+  const thumbCache = {};
+
+  // Real poster art, pulled from Wikipedia's public, CORS-enabled search API
+  // (no key needed, no guessed URLs - the API itself returns the image URL).
+  // Falls back to the emoji tile if a page/thumbnail isn't found.
+  async function fetchShowThumb(title) {
+    if (title in thumbCache) return thumbCache[title];
+    try {
+      const q = encodeURIComponent(`${title} TV series`);
+      const res = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrlimit=1&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`
+      );
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      const pages = data.query && data.query.pages;
+      const first = pages && Object.values(pages)[0];
+      const src = first && first.thumbnail && first.thumbnail.source;
+      thumbCache[title] = src || null;
+    } catch (e) {
+      thumbCache[title] = null;
+    }
+    return thumbCache[title];
+  }
 
   function renderTabs() {
     const tabs = document.getElementById('shows-tabs');
@@ -37,6 +60,17 @@
         <span class="v-title">${s.title}</span>
       `;
       grid.appendChild(card);
+
+      fetchShowThumb(s.title).then(src => {
+        if (!src || !card.isConnected) return;
+        const thumbDiv = card.querySelector('.show-thumb');
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = s.title;
+        img.loading = 'lazy';
+        thumbDiv.prepend(img);
+        thumbDiv.classList.add('has-photo');
+      });
     });
   }
 

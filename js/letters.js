@@ -43,11 +43,11 @@
     document.getElementById('letter-word').classList.add('mal');
     [...document.querySelectorAll('.letter-tile')].forEach((t, i) =>
       t.classList.toggle('active', i === currentIndex));
-    speak(l.ch);
+    speak(l.ch, l.translit);
   }
 
-  document.getElementById('letter-display').addEventListener('click', () => speak(letters()[currentIndex].ch));
-  document.getElementById('letter-say').addEventListener('click', () => speak(letters()[currentIndex].ch));
+  document.getElementById('letter-display').addEventListener('click', () => speak(letters()[currentIndex].ch, letters()[currentIndex].translit));
+  document.getElementById('letter-say').addEventListener('click', () => speak(letters()[currentIndex].ch, letters()[currentIndex].translit));
   document.getElementById('letter-prev').addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + letters().length) % letters().length;
     showLetter();

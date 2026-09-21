@@ -34,7 +34,7 @@
       if (i === pageIndex) d.classList.add('active');
       dots.appendChild(d);
     });
-    speak(p.mal);
+    speak(p.mal, p.en);
   }
 
   document.getElementById('story-prev').addEventListener('click', () => {
@@ -45,7 +45,7 @@
     pageIndex = (pageIndex + 1) % story().pages.length;
     renderPage();
   });
-  document.getElementById('story-say').addEventListener('click', () => speak(page().mal));
+  document.getElementById('story-say').addEventListener('click', () => speak(page().mal, page().en));
 
   document.addEventListener('screen:show', e => {
     if (e.detail.id === 'screen-read') {
