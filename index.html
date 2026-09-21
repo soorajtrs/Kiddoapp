@@ -56,6 +56,9 @@
       <button class="menu-card" data-target="screen-read" style="--card-color:#FF8FAB">
         <span class="menu-emoji">📖</span><span>വായിക്കാം<br>Read</span>
       </button>
+      <button class="menu-card" data-target="screen-agent" style="--card-color:#33334D">
+        <span class="menu-emoji">🎙️</span><span>Voice Buddy<br><small>Ask me!</small></span>
+      </button>
     </nav>
   </section>
 
@@ -177,6 +180,37 @@
         own age, so siblings each see what's right for them.
       </p>
     </div>
+
+    <div class="settings-card">
+      <p class="settings-label">🎙️ Voice Buddy - AI API Key (optional)</p>
+      <p class="settings-hint warn">
+        This app has no server. Your key is saved only in this browser's local
+        storage on this device, and used only to call the AI provider directly
+        from this browser - never sent anywhere else. Anyone with access to
+        this device's browser dev tools could read it. Use a key with a low
+        spending limit, and don't save one on a shared or public device.
+      </p>
+      <div class="key-row">
+        <input type="password" id="settings-api-key" placeholder="sk-ant-..." autocomplete="off">
+        <button id="settings-key-save" class="chip-btn">Save</button>
+        <button id="settings-key-clear" class="chip-btn">Clear</button>
+      </div>
+      <p id="settings-key-status" class="settings-hint"></p>
+    </div>
+  </section>
+
+  <!-- VOICE AGENT SCREEN -->
+  <section id="screen-agent" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>🎙️ Voice Buddy</h2>
+    </header>
+    <div class="agent-stage">
+      <button id="agent-mic" class="agent-mic">🎙️</button>
+      <p id="agent-hint" class="agent-hint">Tap the mic and ask for something - "letters", "videos", "puzzle"...</p>
+      <p id="agent-transcript" class="agent-transcript"></p>
+      <p id="agent-reply" class="agent-reply"></p>
+    </div>
   </section>
 
   <!-- PUZZLE SCREEN -->
@@ -271,5 +305,6 @@
 <script src="js/puzzle.js"></script>
 <script src="js/draw.js"></script>
 <script src="js/read.js"></script>
+<script src="js/agent.js"></script>
 </body>
 </html>

@@ -124,6 +124,46 @@ function initSettings() {
   agePlus.addEventListener('click', () => { setProfileAge(getActiveProfile().id, getProfileAge() + 1); refresh(); });
   document.addEventListener('screen:show', e => { if (e.detail.id === 'screen-settings') refresh(); });
   document.addEventListener('profile:change', refresh);
+
+  initApiKeySettings();
+}
+
+// ---- Voice Buddy API key ------------------------------------------------
+// Stored only in this browser's localStorage on this device - the app has
+// no server to hold it instead. Used only for a direct browser->API call
+// from js/agent.js; see the warning text in the Settings screen itself.
+function getApiKey() {
+  try { return localStorage.getItem('kp_api_key') || ''; } catch (e) { return ''; }
+}
+function setApiKey(key) {
+  try {
+    if (key) localStorage.setItem('kp_api_key', key);
+    else localStorage.removeItem('kp_api_key');
+  } catch (e) { /* ignore */ }
+}
+
+function initApiKeySettings() {
+  const input = document.getElementById('settings-api-key');
+  const saveBtn = document.getElementById('settings-key-save');
+  const clearBtn = document.getElementById('settings-key-clear');
+  const status = document.getElementById('settings-key-status');
+  if (!input) return;
+
+  function refreshStatus() {
+    status.textContent = getApiKey() ? '✅ Key saved on this device.' : 'No key saved - Voice Buddy will ask you to add one.';
+  }
+  document.addEventListener('screen:show', e => { if (e.detail.id === 'screen-settings') { input.value = ''; refreshStatus(); } });
+  saveBtn.addEventListener('click', () => {
+    if (input.value.trim()) setApiKey(input.value.trim());
+    input.value = '';
+    refreshStatus();
+  });
+  clearBtn.addEventListener('click', () => {
+    setApiKey('');
+    input.value = '';
+    refreshStatus();
+  });
+  refreshStatus();
 }
 
 // Shared speech helper - prefers a Malayalam voice. Most devices don't have
