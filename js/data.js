@@ -6,14 +6,14 @@
 const PROFILES = {
   girl: {
     id: "girl", name: "Girl", emoji: "🦄",
-    accent: "#FF6FA5", accent2: "#B983FF", bg: "#FFF3FA",
+    accent: "#FF6FA5", accent2: "#B983FF", bg: "#FFD6EC",
     decor: ["🦄", "🐚", "🌈", "✨", "🎀", "👑"],
     interests: ["fantasy", "magic", "princess", "unicorn", "mermaid", "music", "animals"],
     puzzleEmojis: ["🦄", "🐚", "🌈", "✨", "🎀", "👑", "💖", "🦋", "🌸", "🍭", "⭐", "🧚"],
   },
   boy: {
     id: "boy", name: "Boy", emoji: "🦖",
-    accent: "#2FA8D5", accent2: "#4ECDC4", bg: "#EFFBFF",
+    accent: "#2FA8D5", accent2: "#4ECDC4", bg: "#C9ECFF",
     decor: ["🦖", "🚗", "🚀", "⚽", "🦕", "🏎️"],
     interests: ["dinosaur", "vehicles", "cars", "adventure", "action", "science", "space"],
     puzzleEmojis: ["🦖", "🦕", "🚗", "🚀", "🏎️", "⚽", "🚁", "🛻", "🦴", "🌋", "🔧", "🪐"],
