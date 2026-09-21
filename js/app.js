@@ -103,9 +103,21 @@ function getVoicesAsync() {
   });
 }
 
+// Chrome (and some other engines) can silently drop a speak() call made
+// right after cancel() - a long-standing bug - and can also leave the
+// queue "paused" after being idle for a while. cancel() + resume() +
+// a same-tick-later speak() is the standard workaround, so a tap never
+// goes silent for no visible reason.
+function queueSpeak(utter) {
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    window.speechSynthesis.resume();
+    window.speechSynthesis.speak(utter);
+  }, 0);
+}
+
 async function speak(text, fallbackText) {
   if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
   if (!voicesCache) voicesCache = await getVoicesAsync();
   const mlVoice = voicesCache.find(v => v.lang && v.lang.toLowerCase().startsWith('ml'));
 
@@ -118,5 +130,40 @@ async function speak(text, fallbackText) {
     utter = new SpeechSynthesisUtterance(fallbackText || text);
   }
   utter.rate = 0.85;
-  window.speechSynthesis.speak(utter);
+  queueSpeak(utter);
+  showVoiceNotice(!mlVoice);
 }
+
+// For English content - never borrows a Malayalam voice (which would
+// mispronounce English), and always speaks the lowercase form of a single
+// letter: many TTS engines say "capital A" instead of just "A" for an
+// isolated uppercase character, and the sound is identical either way.
+async function speakEnglish(text) {
+  if (!('speechSynthesis' in window)) return;
+  if (!voicesCache) voicesCache = await getVoicesAsync();
+  const enVoice = voicesCache.find(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+  const utter = new SpeechSynthesisUtterance(text.length === 1 ? text.toLowerCase() : text);
+  if (enVoice) utter.voice = enVoice;
+  utter.rate = 0.85;
+  queueSpeak(utter);
+}
+
+// This device doesn't have an installed Malayalam voice, so the browser
+// can only approximate pronunciation by reading the romanized spelling in
+// English - it will never sound truly correct until a real Malayalam voice
+// is installed. Say so, once per screen visit, rather than pretend it's
+// right. (Android: Settings > System > Languages > Text-to-speech >
+// [engine] > Install voice data > Malayalam. iOS: Settings >
+// Accessibility > Spoken Content > Voices > Malayalam.)
+let voiceNoticeShown = false;
+function showVoiceNotice(usingFallback) {
+  const note = document.getElementById('voice-notice');
+  if (!note) return;
+  if (usingFallback) {
+    note.classList.remove('hidden');
+    voiceNoticeShown = true;
+  } else {
+    note.classList.add('hidden');
+  }
+}
+document.addEventListener('screen:show', () => { voiceNoticeShown = false; });

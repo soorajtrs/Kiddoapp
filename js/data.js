@@ -5,11 +5,11 @@
 // Videos/Shows/Puzzle without hiding anything else.
 const PROFILES = {
   girl: {
-    id: "girl", name: "Girl", emoji: "🧜‍♀️",
+    id: "girl", name: "Girl", emoji: "🦄",
     accent: "#FF6FA5", accent2: "#B983FF", bg: "#FFF3FA",
-    decor: ["🦄", "🧜‍♀️", "🌈", "✨", "🎀", "👑"],
+    decor: ["🦄", "🐚", "🌈", "✨", "🎀", "👑"],
     interests: ["fantasy", "magic", "princess", "unicorn", "mermaid", "music", "animals"],
-    puzzleEmojis: ["🦄", "🧜‍♀️", "🌈", "✨", "🎀", "👑", "🐚", "💖", "🦋", "🌸", "🍭", "⭐"],
+    puzzleEmojis: ["🦄", "🐚", "🌈", "✨", "🎀", "👑", "💖", "🦋", "🌸", "🍭", "⭐", "🧚"],
   },
   boy: {
     id: "boy", name: "Boy", emoji: "🦖",
@@ -146,7 +146,6 @@ const VIDEOS = [
   { id: "TpX_6G298FE", title: "Dinosaurs, Pirates & Space - CBeebies", tags: ["dinosaur", "adventure", "space"] },
   { id: "XgmssjOGgPg", title: "Dinosaur Adventures - CBeebies Vegesaurs", tags: ["dinosaur", "adventure"] },
   { id: "eUunYTYia3I", title: "Amazing Animals - Nat Geo Kids", tags: ["animals", "science"] },
-  { id: "lmRmk2HrqYA", title: "Animal Showdown - Nat Geo Kids", tags: ["animals", "adventure"] },
   { id: "HrlDQ4iZoD8", title: "Cute Animals of Land & Sea - Nat Geo Kids", tags: ["animals", "music"] },
 ];
 

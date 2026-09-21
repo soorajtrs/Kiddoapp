@@ -89,6 +89,18 @@ html, body {
   padding: 16px;
 }
 
+.hidden { display: none !important; }
+
+.voice-notice {
+  background: #FFF3CD;
+  color: #8A6D00;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: .82rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
 .screen { display: none; }
 .screen.active { display: block; animation: fadein .25s ease; }
 @keyframes fadein { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
@@ -382,8 +394,22 @@ html, body {
   box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
 .story-emoji { font-size: 4rem; }
-.story-mal { font-family: 'Baloo Chettan 2', sans-serif; font-size: 1.8rem; margin-top: 10px; color: #FF6B6B; }
+.story-mal { font-family: 'Baloo Chettan 2', sans-serif; font-size: 1.8rem; margin-top: 10px; color: var(--accent); }
 .story-en { font-size: 1.1rem; color: #777; margin-top: 6px; }
 .page-dots { margin-top: 14px; display: flex; justify-content: center; gap: 6px; }
+
+.pdf-upload { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.pdf-upload input[type="file"] { display: none; }
+.pdf-filename { color: #777; font-size: .9rem; }
+.pdf-status { color: #999; font-size: .9rem; }
+.pdf-text {
+  max-height: 40vh;
+  overflow-y: auto;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  white-space: pre-wrap;
+}
+.pdf-page-info { text-align: center; color: #999; font-size: .85rem; margin-top: 10px; }
 .page-dots span { width: 8px; height: 8px; border-radius: 50%; background: #ddd; display: inline-block; }
 .page-dots span.active { background: #FF6B6B; }
