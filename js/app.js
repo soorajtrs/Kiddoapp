@@ -128,41 +128,110 @@ function initSettings() {
   initApiKeySettings();
 }
 
-// ---- Voice Buddy API key ------------------------------------------------
+// ---- Voice Buddy provider config -----------------------------------------
 // Stored only in this browser's localStorage on this device - the app has
-// no server to hold it instead. Used only for a direct browser->API call
-// from js/agent.js; see the warning text in the Settings screen itself.
-function getApiKey() {
-  try { return localStorage.getItem('kp_api_key') || ''; } catch (e) { return ''; }
+// no server to hold it instead. Used only for a direct browser->provider
+// call from js/agent.js; see the warning text in the Settings screen itself.
+function getAgentProvider() {
+  try { return localStorage.getItem('kp_agent_provider') || 'gemini'; } catch (e) { return 'gemini'; }
 }
-function setApiKey(key) {
+function setAgentProvider(p) {
+  try { localStorage.setItem('kp_agent_provider', p); } catch (e) { /* ignore */ }
+}
+
+function getAgentConfig() {
+  const provider = getAgentProvider();
   try {
-    if (key) localStorage.setItem('kp_api_key', key);
-    else localStorage.removeItem('kp_api_key');
+    if (provider === 'local') {
+      return {
+        provider: 'local',
+        url: (localStorage.getItem('kp_local_url') || '').replace(/\/$/, ''),
+        model: localStorage.getItem('kp_local_model') || '',
+      };
+    }
+    return {
+      provider: 'gemini',
+      key: localStorage.getItem('kp_gemini_key') || '',
+      model: localStorage.getItem('kp_gemini_model') || 'gemini-2.0-flash',
+    };
+  } catch (e) {
+    return { provider };
+  }
+}
+
+function isAgentConfigured() {
+  const cfg = getAgentConfig();
+  return cfg.provider === 'local' ? !!cfg.url : !!cfg.key;
+}
+
+function saveAgentConfig(fields) {
+  try {
+    Object.entries(fields).forEach(([k, v]) => {
+      if (v) localStorage.setItem(k, v); else localStorage.removeItem(k);
+    });
+  } catch (e) { /* ignore */ }
+}
+
+function clearAgentConfig() {
+  try {
+    ['kp_gemini_key', 'kp_gemini_model', 'kp_local_url', 'kp_local_model'].forEach(k => localStorage.removeItem(k));
   } catch (e) { /* ignore */ }
 }
 
 function initApiKeySettings() {
-  const input = document.getElementById('settings-api-key');
+  const tabs = document.getElementById('agent-provider-tabs');
+  const geminiFields = document.getElementById('agent-provider-gemini');
+  const localFields = document.getElementById('agent-provider-local');
   const saveBtn = document.getElementById('settings-key-save');
   const clearBtn = document.getElementById('settings-key-clear');
   const status = document.getElementById('settings-key-status');
-  if (!input) return;
+  if (!tabs) return;
+
+  function showProvider(p) {
+    tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.provider === p));
+    geminiFields.classList.toggle('hidden', p !== 'gemini');
+    localFields.classList.toggle('hidden', p !== 'local');
+  }
 
   function refreshStatus() {
-    status.textContent = getApiKey() ? '✅ Key saved on this device.' : 'No key saved - Voice Buddy will ask you to add one.';
+    status.textContent = isAgentConfigured()
+      ? `✅ ${getAgentProvider() === 'local' ? 'Local LLM' : 'Gemini'} configured on this device.`
+      : 'Not set up yet - Voice Buddy will ask you to configure a provider.';
   }
-  document.addEventListener('screen:show', e => { if (e.detail.id === 'screen-settings') { input.value = ''; refreshStatus(); } });
+
+  tabs.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => { setAgentProvider(btn.dataset.provider); showProvider(btn.dataset.provider); refreshStatus(); });
+  });
+
+  document.addEventListener('screen:show', e => {
+    if (e.detail.id === 'screen-settings') {
+      showProvider(getAgentProvider());
+      refreshStatus();
+    }
+  });
+
   saveBtn.addEventListener('click', () => {
-    if (input.value.trim()) setApiKey(input.value.trim());
-    input.value = '';
+    const provider = getAgentProvider();
+    if (provider === 'local') {
+      saveAgentConfig({
+        kp_local_url: document.getElementById('settings-local-url').value.trim(),
+        kp_local_model: document.getElementById('settings-local-model').value.trim(),
+      });
+    } else {
+      saveAgentConfig({
+        kp_gemini_key: document.getElementById('settings-gemini-key').value.trim(),
+        kp_gemini_model: document.getElementById('settings-gemini-model').value.trim(),
+      });
+    }
     refreshStatus();
   });
   clearBtn.addEventListener('click', () => {
-    setApiKey('');
-    input.value = '';
+    clearAgentConfig();
+    [geminiFields, localFields].forEach(el => el.querySelectorAll('input').forEach(i => i.value = ''));
     refreshStatus();
   });
+
+  showProvider(getAgentProvider());
   refreshStatus();
 }
 

@@ -31,29 +31,57 @@
   }
 
   async function askAgent(transcript) {
-    const key = getApiKey();
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const cfg = getAgentConfig();
+    const text = cfg.provider === 'local'
+      ? await askLocalLLM(cfg, transcript)
+      : await askGemini(cfg, transcript);
+    return parseAgentReply(text);
+  }
+
+  async function askGemini(cfg, transcript) {
+    const model = cfg.model || 'gemini-2.0-flash';
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cfg.key)}`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: 'user', parts: [{ text: transcript }] }],
+          generationConfig: { maxOutputTokens: 150 },
+        }),
+      }
+    );
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`Gemini error ${res.status}: ${body.slice(0, 200)}`);
+    }
+    const data = await res.json();
+    const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
+    return parts.map(p => p.text || '').join('\n').trim();
+  }
+
+  async function askLocalLLM(cfg, transcript) {
+    if (!cfg.url) throw new Error('No local server URL configured');
+    const res = await fetch(`${cfg.url}/v1/chat/completions`, {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: cfg.model || undefined,
         max_tokens: 150,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: transcript }],
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: transcript },
+        ],
       }),
     });
     if (!res.ok) {
       const body = await res.text().catch(() => '');
-      throw new Error(`API error ${res.status}: ${body.slice(0, 200)}`);
+      throw new Error(`Local LLM error ${res.status}: ${body.slice(0, 200)}`);
     }
     const data = await res.json();
-    const text = (data.content || []).map(b => b.text || '').join('\n').trim();
-    return parseAgentReply(text);
+    const choice = data.choices && data.choices[0];
+    return ((choice && choice.message && choice.message.content) || '').trim();
   }
 
   function parseAgentReply(text) {
@@ -76,8 +104,8 @@
     function setHint(text) { hint.textContent = text; }
 
     micBtn.addEventListener('click', () => {
-      if (!getApiKey()) {
-        setHint('Add an AI key in Settings first, then come back and tap the mic.');
+      if (!isAgentConfigured()) {
+        setHint('Set up Gemini or a Local LLM in Settings first, then come back and tap the mic.');
         return;
       }
       if (!recognition) recognition = getRecognition();
@@ -104,7 +132,7 @@
           setHint('Tap the mic to ask again.');
           if (target) setTimeout(() => showScreen(target), 1800);
         } catch (err) {
-          replyEl.textContent = "I couldn't reach my AI brain - check the key in Settings and your internet.";
+          replyEl.textContent = "I couldn't reach my AI brain - check the setup in Settings and your internet.";
           setHint('Tap the mic to try again.');
         }
       };
@@ -120,7 +148,7 @@
 
     document.addEventListener('screen:show', e => {
       if (e.detail.id === 'screen-agent') {
-        if (!getApiKey()) setHint('Add an AI key in Settings first, then come back and tap the mic.');
+        if (!isAgentConfigured()) setHint('Set up Gemini or a Local LLM in Settings first, then come back and tap the mic.');
         else if (!getRecognition()) setHint("This browser can't listen for speech. Try Chrome on Android or desktop.");
         else setHint('Tap the mic and ask for something - "letters", "videos", "puzzle"...');
       } else if (recognition && listening) {

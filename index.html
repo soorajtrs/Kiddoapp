@@ -182,16 +182,37 @@
     </div>
 
     <div class="settings-card">
-      <p class="settings-label">🎙️ Voice Buddy - AI API Key (optional)</p>
+      <p class="settings-label">🎙️ Voice Buddy - AI Provider (optional)</p>
       <p class="settings-hint warn">
-        This app has no server. Your key is saved only in this browser's local
-        storage on this device, and used only to call the AI provider directly
-        from this browser - never sent anywhere else. Anyone with access to
-        this device's browser dev tools could read it. Use a key with a low
-        spending limit, and don't save one on a shared or public device.
+        This app has no server. Anything you save here stays only in this
+        browser's local storage on this device, and is used only to call the
+        chosen provider directly from this browser - never sent anywhere
+        else. A saved key is visible to anyone with dev-tools access to this
+        device; use one with a low spending limit and don't save it on a
+        shared or public device. Local LLM never leaves your own network.
       </p>
+      <div class="tabs" id="agent-provider-tabs">
+        <button class="tab-btn" data-provider="gemini">Gemini</button>
+        <button class="tab-btn" data-provider="local">Local LLM</button>
+      </div>
+      <div id="agent-provider-gemini" class="provider-fields">
+        <div class="key-row">
+          <input type="password" id="settings-gemini-key" placeholder="Gemini API key (AIza...)" autocomplete="off">
+        </div>
+        <div class="key-row">
+          <input type="text" id="settings-gemini-model" placeholder="Model (default: gemini-2.0-flash)" autocomplete="off">
+        </div>
+      </div>
+      <div id="agent-provider-local" class="provider-fields hidden">
+        <div class="key-row">
+          <input type="text" id="settings-local-url" placeholder="Server URL, e.g. http://localhost:11434" autocomplete="off">
+        </div>
+        <div class="key-row">
+          <input type="text" id="settings-local-model" placeholder="Model name, e.g. llama3.2" autocomplete="off">
+        </div>
+        <p class="settings-hint">Works with any OpenAI-compatible local server (Ollama, LM Studio, llama.cpp).</p>
+      </div>
       <div class="key-row">
-        <input type="password" id="settings-api-key" placeholder="sk-ant-..." autocomplete="off">
         <button id="settings-key-save" class="chip-btn">Save</button>
         <button id="settings-key-clear" class="chip-btn">Clear</button>
       </div>
