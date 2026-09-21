@@ -40,10 +40,27 @@
     });
   }
 
+  function sectionLabel(text) {
+    const h = document.createElement('div');
+    h.className = 'section-label';
+    h.textContent = text;
+    return h;
+  }
+
   function renderGrid() {
     const grid = document.getElementById('shows-grid');
     grid.innerHTML = '';
-    SHOW_CATEGORIES[currentCat].forEach(s => {
+    const ranked = withRecommendations(SHOW_CATEGORIES[currentCat]);
+    let labeledRecommended = false;
+    let labeledMore = false;
+    ranked.forEach(s => {
+      if (s.recommended && !labeledRecommended) {
+        grid.appendChild(sectionLabel('🌟 Recommended for you'));
+        labeledRecommended = true;
+      } else if (!s.recommended && !labeledMore && labeledRecommended) {
+        grid.appendChild(sectionLabel('More shows'));
+        labeledMore = true;
+      }
       const url = s.platform === 'netflix' ? netflixSearch(s.title) : primeSearch(s.title);
       const platformLabel = s.platform === 'netflix' ? 'Netflix' : 'Prime Video';
       const badgeColor = s.platform === 'netflix' ? '#E50914' : '#00A8E1';
@@ -79,5 +96,8 @@
       renderTabs();
       renderGrid();
     }
+  });
+  document.addEventListener('profile:change', () => {
+    if (document.getElementById('screen-shows').classList.contains('active')) renderGrid();
   });
 })();

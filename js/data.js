@@ -1,5 +1,25 @@
 // ---- Malayalam learning content -----------------------------------------
 
+// Two kid profiles - each has a theme (colors + decorative emoji) and a
+// list of interest tags used to sort "Recommended for you" first in
+// Videos/Shows/Puzzle without hiding anything else.
+const PROFILES = {
+  girl: {
+    id: "girl", name: "Girl", emoji: "🧜‍♀️",
+    accent: "#FF6FA5", accent2: "#B983FF", bg: "#FFF3FA",
+    decor: ["🦄", "🧜‍♀️", "🌈", "✨", "🎀", "👑"],
+    interests: ["fantasy", "magic", "princess", "unicorn", "mermaid", "music", "animals"],
+    puzzleEmojis: ["🦄", "🧜‍♀️", "🌈", "✨", "🎀", "👑", "🐚", "💖", "🦋", "🌸", "🍭", "⭐"],
+  },
+  boy: {
+    id: "boy", name: "Boy", emoji: "🦖",
+    accent: "#2FA8D5", accent2: "#4ECDC4", bg: "#EFFBFF",
+    decor: ["🦖", "🚗", "🚀", "⚽", "🦕", "🏎️"],
+    interests: ["dinosaur", "vehicles", "cars", "adventure", "action", "science", "space"],
+    puzzleEmojis: ["🦖", "🦕", "🚗", "🚀", "🏎️", "⚽", "🚁", "🛻", "🦴", "🌋", "🔧", "🪐"],
+  },
+};
+
 const LETTER_GROUPS = {
   "Vowels": [
     { ch: "അ", translit: "a", word: "അമ്മ (amma) - Mother" },
@@ -117,12 +137,17 @@ const WORD_CATEGORIES = {
 // Add more by pushing { id: '<youtube-id>', title, thumb } — id is the
 // part after v= in a YouTube URL.
 const VIDEOS = [
-  { id: "LEK2Vk1jRes", title: "Letter മ (Ma) - Thumbi TV" },
-  { id: "GdoVLVGuO8k", title: "Letter വ (Va) - Thumbi TV" },
-  { id: "JIuSZdgIkx8", title: "Letter ക (Ka) - Thumbi TV" },
-  { id: "2kk3Y2JsQq8", title: "അക്ഷരമാല - Malayalam Letters" },
-  { id: "3mG34YXaSbM", title: "Malayalam Alphabets & Words" },
-  { id: "4Bie_8QkOEs", title: "Malayalam Alphabet Song" },
+  { id: "LEK2Vk1jRes", title: "Letter മ (Ma) - Thumbi TV", tags: ["letters", "music"] },
+  { id: "GdoVLVGuO8k", title: "Letter വ (Va) - Thumbi TV", tags: ["letters", "music"] },
+  { id: "JIuSZdgIkx8", title: "Letter ക (Ka) - Thumbi TV", tags: ["letters", "music"] },
+  { id: "2kk3Y2JsQq8", title: "അക്ഷരമാല - Malayalam Letters", tags: ["letters"] },
+  { id: "3mG34YXaSbM", title: "Malayalam Alphabets & Words", tags: ["letters", "animals"] },
+  { id: "4Bie_8QkOEs", title: "Malayalam Alphabet Song", tags: ["letters", "music"] },
+  { id: "TpX_6G298FE", title: "Dinosaurs, Pirates & Space - CBeebies", tags: ["dinosaur", "adventure", "space"] },
+  { id: "XgmssjOGgPg", title: "Dinosaur Adventures - CBeebies Vegesaurs", tags: ["dinosaur", "adventure"] },
+  { id: "eUunYTYia3I", title: "Amazing Animals - Nat Geo Kids", tags: ["animals", "science"] },
+  { id: "lmRmk2HrqYA", title: "Animal Showdown - Nat Geo Kids", tags: ["animals", "adventure"] },
+  { id: "HrlDQ4iZoD8", title: "Cute Animals of Land & Sea - Nat Geo Kids", tags: ["animals", "music"] },
 ];
 
 // Curated kid-appropriate titles. Each links out to a Netflix/Prime Video
@@ -137,23 +162,23 @@ function primeSearch(title) {
 
 const SHOW_CATEGORIES = {
   "Shows for age 4": [
-    { title: "Bluey", emoji: "🐶", platform: "netflix" },
-    { title: "CoComelon", emoji: "🚜", platform: "netflix" },
-    { title: "Peppa Pig", emoji: "🐷", platform: "netflix" },
-    { title: "Ada Twist, Scientist", emoji: "🔬", platform: "netflix" },
-    { title: "Gabby's Dollhouse", emoji: "🏠", platform: "netflix" },
-    { title: "Word Party", emoji: "🎉", platform: "netflix" },
+    { title: "Bluey", emoji: "🐶", platform: "netflix", tags: ["family", "animals", "adventure"] },
+    { title: "CoComelon", emoji: "🚜", platform: "netflix", tags: ["music", "vehicles"] },
+    { title: "Peppa Pig", emoji: "🐷", platform: "netflix", tags: ["family", "animals"] },
+    { title: "Ada Twist, Scientist", emoji: "🔬", platform: "netflix", tags: ["science", "adventure"] },
+    { title: "Gabby's Dollhouse", emoji: "🏠", platform: "netflix", tags: ["fantasy", "magic", "princess"] },
+    { title: "Word Party", emoji: "🎉", platform: "netflix", tags: ["animals", "music"] },
   ],
   "Prime Video picks": [
-    { title: "Pete the Cat", emoji: "🐱", platform: "prime" },
-    { title: "Dinotrux", emoji: "🦕", platform: "prime" },
-    { title: "Wishenpoof", emoji: "✨", platform: "prime" },
-    { title: "The Stinky and Dirty Show", emoji: "🚚", platform: "prime" },
+    { title: "Pete the Cat", emoji: "🐱", platform: "prime", tags: ["animals", "music"] },
+    { title: "Dinotrux", emoji: "🦕", platform: "prime", tags: ["dinosaur", "vehicles", "action"] },
+    { title: "Wishenpoof", emoji: "✨", platform: "prime", tags: ["fantasy", "magic", "unicorn"] },
+    { title: "The Stinky and Dirty Show", emoji: "🚚", platform: "prime", tags: ["vehicles", "adventure"] },
   ],
   "Malayalam & Indian": [
-    { title: "Chhota Bheem", emoji: "💪", platform: "prime" },
-    { title: "Motu Patlu", emoji: "😄", platform: "prime" },
-    { title: "Mighty Little Bheem", emoji: "👶", platform: "netflix" },
+    { title: "Chhota Bheem", emoji: "💪", platform: "prime", tags: ["adventure", "action"] },
+    { title: "Motu Patlu", emoji: "😄", platform: "prime", tags: ["adventure", "action"] },
+    { title: "Mighty Little Bheem", emoji: "👶", platform: "netflix", tags: ["family", "adventure"] },
   ],
 };
 

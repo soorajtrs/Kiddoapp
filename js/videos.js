@@ -9,6 +9,13 @@
   const TOLERANCE = 1.5;       // seconds of slack before we call it a "skip"
   const LOCK_SECONDS = 15 * 60; // suggestions stay hidden for 15 min of watching
 
+  function sectionLabel(text) {
+    const h = document.createElement('div');
+    h.className = 'section-label';
+    h.textContent = text;
+    return h;
+  }
+
   function loadYouTubeAPI() {
     if (window.YT && window.YT.Player) { ytReady = true; return; }
     if (document.getElementById('yt-api-script')) return;
@@ -22,7 +29,17 @@
   function renderList() {
     const list = document.getElementById('video-list');
     list.innerHTML = '';
-    VIDEOS.forEach(v => {
+    const ranked = withRecommendations(VIDEOS);
+    let labeledRecommended = false;
+    let labeledMore = false;
+    ranked.forEach(v => {
+      if (v.recommended && !labeledRecommended) {
+        list.appendChild(sectionLabel('🌟 Recommended for you'));
+        labeledRecommended = true;
+      } else if (!v.recommended && !labeledMore && labeledRecommended) {
+        list.appendChild(sectionLabel('More videos'));
+        labeledMore = true;
+      }
       const card = document.createElement('button');
       card.className = 'video-thumb';
       card.innerHTML = `
@@ -168,6 +185,13 @@
     document.querySelector('#screen-videos .video-list').classList.remove('hidden');
     if (ytPlayer) ytPlayer.pauseVideo();
     stopGuard();
+  });
+
+  document.addEventListener('profile:change', () => {
+    if (document.getElementById('screen-videos').classList.contains('active')
+        && document.getElementById('video-player-wrap').classList.contains('hidden')) {
+      renderList();
+    }
   });
 
   document.addEventListener('screen:show', e => {

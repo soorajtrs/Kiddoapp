@@ -1,5 +1,10 @@
 (function () {
-  const EMOJIS = ['🐘','🐕','🐈','🐄','🐟','🐦','🍌','🍎','🥭','🍇','☀️','🌈','🚗','⚽','🎈','🌸','🐝','🦋','🐢','🐸'];
+  const BASE_EMOJIS = ['🐘','🐕','🐈','🐄','🐟','🐦','🍌','🍎','🥭','🍇','☀️','🌈','⚽','🎈','🌸','🐝','🦋','🐢','🐸'];
+  function emojiPool() {
+    // Blend the active profile's favorite emoji in with the base set so the
+    // game always has variety but leans toward what this kid likes.
+    return [...getActiveProfile().puzzleEmojis, ...BASE_EMOJIS];
+  }
   let size = 6; // number of pairs
   let cards = [];
   let flipped = [];
@@ -16,7 +21,7 @@
   }
 
   function newGame() {
-    const chosen = shuffle(EMOJIS).slice(0, size);
+    const chosen = shuffle(emojiPool()).slice(0, size);
     cards = shuffle([...chosen, ...chosen]).map((emoji, i) => ({ id: i, emoji, matched: false }));
     flipped = [];
     matchedCount = 0;
@@ -88,5 +93,8 @@
       document.querySelector('.puzzle-controls .chip-btn[data-size="6"]').classList.add('active');
       newGame();
     }
+  });
+  document.addEventListener('profile:change', () => {
+    if (document.getElementById('screen-puzzle').classList.contains('active')) newGame();
   });
 })();
