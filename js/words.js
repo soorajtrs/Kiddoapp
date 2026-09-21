@@ -29,7 +29,7 @@
         <span class="w-translit">${w.translit}</span>
         <span class="w-en">${w.en}</span>
       `;
-      card.addEventListener('click', () => speak(w.mal));
+      card.addEventListener('click', () => speak(w.mal, w.translit));
       grid.appendChild(card);
     });
   }

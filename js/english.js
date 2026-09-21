@@ -43,11 +43,11 @@
       t.classList.toggle('active', i === currentIndex));
     document.getElementById('trace-guide').textContent = l.ch;
     clearTrace();
-    speak(l.ch);
+    speakEnglish(l.ch);
   }
 
-  document.getElementById('english-display').addEventListener('click', () => speak(letters()[currentIndex].ch));
-  document.getElementById('english-say').addEventListener('click', () => speak(letters()[currentIndex].ch));
+  document.getElementById('english-display').addEventListener('click', () => speakEnglish(letters()[currentIndex].ch));
+  document.getElementById('english-say').addEventListener('click', () => speakEnglish(letters()[currentIndex].ch));
   document.getElementById('english-prev').addEventListener('click', () => {
     currentIndex = (currentIndex - 1 + letters().length) % letters().length;
     showLetter();

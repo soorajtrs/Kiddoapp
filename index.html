@@ -10,12 +10,40 @@
 </head>
 <body>
 
+<div id="decor-layer" aria-hidden="true"></div>
+
+<!-- Persistent voice assistant - floating on every screen -->
+<button id="agent-fab" class="agent-fab" aria-label="Voice Buddy">🧸</button>
+<div id="agent-modal" class="agent-modal hidden">
+  <div class="agent-modal-card">
+    <button id="agent-modal-close" class="agent-modal-close" aria-label="Close">✕</button>
+    <div class="agent-stage">
+      <button id="agent-mic" class="agent-mic">🎙️</button>
+      <p id="agent-hint" class="agent-hint">What would you like to do?</p>
+      <p id="agent-transcript" class="agent-transcript"></p>
+      <p id="agent-reply" class="agent-reply"></p>
+      <button id="agent-goto-settings" class="chip-btn hidden">⚙️ Go to Settings</button>
+    </div>
+  </div>
+</div>
+
 <div id="app">
+
+  <p id="voice-notice" class="voice-notice hidden">
+    🔈 This device has no Malayalam voice installed, so audio is an approximate English reading of the transliteration, not real Malayalam pronunciation. For accurate speech, install a Malayalam voice: <b>Android</b> — Settings → Languages → Text-to-speech → Install voice data → Malayalam. <b>iOS</b> — Settings → Accessibility → Spoken Content → Voices → Malayalam.
+  </p>
 
   <!-- HOME SCREEN -->
   <section id="screen-home" class="screen active">
+    <div class="profile-row">
+      <div id="profile-picker" class="profile-picker">
+        <button class="profile-btn" data-profile="girl">🦄 <span>Girl</span></button>
+        <button class="profile-btn" data-profile="boy">🦖 <span>Boy</span></button>
+      </div>
+      <button class="settings-btn" data-target="screen-settings" aria-label="Settings">⚙️</button>
+    </div>
     <header class="home-header">
-      <h1><span class="emoji">🧒</span> കുട്ടി പഠനം <span class="sub">Kutty Padam</span></h1>
+      <h1><span class="emoji" id="home-mascot">🧒</span> കുട്ടി പഠനം <span class="sub">Kutty Padam</span></h1>
       <p class="tagline">Learn Malayalam &amp; Play!</p>
     </header>
     <nav class="menu-grid">
@@ -137,12 +165,73 @@
       <h2>Movies &amp; Shows</h2>
     </header>
     <p class="shows-note">
-      These open Netflix or Prime Video in a new tab, where you sign in yourself —
-      this app never sees or stores your login. Pick a show together, then hand
-      the screen to your kid. 👨‍👩‍👧
+      These open the show's real streaming page in a new tab - Netflix, Prime
+      Video, or a "where to watch" page when a title is on another service or
+      its platform has changed - where you sign in yourself. This app never
+      sees or stores your login. Pick a show together, then hand the screen
+      to your kid. 👨‍👩‍👧
     </p>
     <div class="tabs" id="shows-tabs"></div>
     <div class="video-list" id="shows-grid"></div>
+  </section>
+
+  <!-- SETTINGS SCREEN -->
+  <section id="screen-settings" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>⚙️ Settings</h2>
+    </header>
+    <div class="settings-card">
+      <p class="settings-label">Age for <b id="settings-profile-name">this profile</b></p>
+      <div class="age-stepper">
+        <button id="settings-age-minus" class="round-btn">−</button>
+        <span id="settings-age-value" class="age-value">4</span>
+        <button id="settings-age-plus" class="round-btn">+</button>
+      </div>
+      <p class="settings-hint">
+        Movies &amp; Shows are filtered to what's age-appropriate. Raise this as
+        your child grows to unlock more shows; each profile (Girl/Boy) has its
+        own age, so siblings each see what's right for them.
+      </p>
+    </div>
+
+    <div class="settings-card">
+      <p class="settings-label">🎙️ Voice Buddy - AI Provider (optional)</p>
+      <p class="settings-hint warn">
+        This app has no server. Anything you save here stays only in this
+        browser's local storage on this device, and is used only to call the
+        chosen provider directly from this browser - never sent anywhere
+        else. A saved key is visible to anyone with dev-tools access to this
+        device; use one with a low spending limit and don't save it on a
+        shared or public device. Local LLM never leaves your own network.
+      </p>
+      <div class="tabs" id="agent-provider-tabs">
+        <button class="tab-btn" data-provider="gemini">Gemini</button>
+        <button class="tab-btn" data-provider="local">Local LLM</button>
+      </div>
+      <div id="agent-provider-gemini" class="provider-fields">
+        <div class="key-row">
+          <input type="password" id="settings-gemini-key" placeholder="Gemini API key (AIza...)" autocomplete="off">
+        </div>
+        <div class="key-row">
+          <input type="text" id="settings-gemini-model" placeholder="Model (default: gemini-2.0-flash)" autocomplete="off">
+        </div>
+      </div>
+      <div id="agent-provider-local" class="provider-fields hidden">
+        <div class="key-row">
+          <input type="text" id="settings-local-url" placeholder="Server URL, e.g. http://localhost:11434" autocomplete="off">
+        </div>
+        <div class="key-row">
+          <input type="text" id="settings-local-model" placeholder="Model name, e.g. llama3.2" autocomplete="off">
+        </div>
+        <p class="settings-hint">Works with any OpenAI-compatible local server (Ollama, LM Studio, llama.cpp).</p>
+      </div>
+      <div class="key-row">
+        <button id="settings-key-save" class="chip-btn">Save</button>
+        <button id="settings-key-clear" class="chip-btn">Clear</button>
+      </div>
+      <p id="settings-key-status" class="settings-hint"></p>
+    </div>
   </section>
 
   <!-- PUZZLE SCREEN -->
@@ -183,23 +272,52 @@
       <button class="back-btn" data-target="screen-home">⬅ Home</button>
       <h2>വായിക്കാം — Story Time</h2>
     </header>
-    <div class="story-tabs" id="story-tabs"></div>
-    <div class="story-page">
-      <div id="story-emoji" class="story-emoji"></div>
-      <div id="story-mal" class="story-mal"></div>
-      <div id="story-en" class="story-en"></div>
-      <div class="stage-nav">
-        <button id="story-prev" class="round-btn">⬅</button>
-        <button id="story-say" class="round-btn say-btn">🔊 Read to me</button>
-        <button id="story-next" class="round-btn">➡</button>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="read-mode-stories">📖 Stories</button>
+      <button class="tab-btn" id="read-mode-pdf">📄 Read a PDF</button>
+    </div>
+
+    <div id="stories-panel">
+      <div class="story-tabs" id="story-tabs"></div>
+      <div class="story-page">
+        <div id="story-emoji" class="story-emoji"></div>
+        <div id="story-mal" class="story-mal"></div>
+        <div id="story-en" class="story-en"></div>
+        <div class="stage-nav">
+          <button id="story-prev" class="round-btn">⬅</button>
+          <button id="story-say" class="round-btn say-btn">🔊 Read to me</button>
+          <button id="story-next" class="round-btn">➡</button>
+        </div>
+        <div id="story-page-dots" class="page-dots"></div>
       </div>
-      <div id="story-page-dots" class="page-dots"></div>
+    </div>
+
+    <div id="pdf-panel" class="hidden">
+      <div class="pdf-upload">
+        <label for="pdf-file" class="chip-btn">📂 Choose a PDF</label>
+        <input type="file" id="pdf-file" accept="application/pdf">
+        <span id="pdf-filename" class="pdf-filename"></span>
+      </div>
+      <p id="pdf-status" class="pdf-status"></p>
+      <div id="pdf-page-wrap" class="story-page hidden">
+        <div id="pdf-text" class="pdf-text"></div>
+        <div class="stage-nav">
+          <button id="pdf-prev" class="round-btn">⬅</button>
+          <button id="pdf-say" class="round-btn say-btn">🔊 Read to me</button>
+          <button id="pdf-pause" class="round-btn">⏸ Pause</button>
+          <button id="pdf-next" class="round-btn">➡</button>
+        </div>
+        <div id="pdf-page-info" class="pdf-page-info"></div>
+      </div>
     </div>
   </section>
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="js/data.js"></script>
+<script src="js/ml-audio.js"></script>
 <script src="js/app.js"></script>
 <script src="js/letters.js"></script>
 <script src="js/english.js"></script>
@@ -209,5 +327,6 @@
 <script src="js/puzzle.js"></script>
 <script src="js/draw.js"></script>
 <script src="js/read.js"></script>
+<script src="js/agent.js"></script>
 </body>
 </html>
