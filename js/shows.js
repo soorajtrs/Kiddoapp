@@ -47,6 +47,17 @@
     return h;
   }
 
+  // Badge is derived from the real url itself, not a hand-set platform
+  // field - so it can never claim a show is "on Netflix" when the actual
+  // link points somewhere else (streaming rights change; JustWatch links
+  // show every current option rather than one platform).
+  function platformBadge(url) {
+    if (url.includes('netflix.com')) return { label: 'Netflix', color: '#E50914' };
+    if (url.includes('primevideo.com') || url.includes('amazon.')) return { label: 'Prime Video', color: '#00A8E1' };
+    if (url.includes('hotstar.com')) return { label: 'Hotstar', color: '#1F80E0' };
+    return { label: 'Where to Watch', color: '#8B5CF6' };
+  }
+
   function renderGrid() {
     const grid = document.getElementById('shows-grid');
     grid.innerHTML = '';
@@ -65,18 +76,16 @@
         grid.appendChild(sectionLabel('More shows'));
         labeledMore = true;
       }
-      const url = s.platform === 'netflix' ? netflixSearch(s.title) : primeSearch(s.title);
-      const platformLabel = s.platform === 'netflix' ? 'Netflix' : 'Prime Video';
-      const badgeColor = s.platform === 'netflix' ? '#E50914' : '#00A8E1';
+      const badge = platformBadge(s.url);
       const card = document.createElement('a');
       card.className = 'video-thumb show-card';
-      card.href = url;
+      card.href = s.url;
       card.target = '_blank';
       card.rel = 'noopener noreferrer';
       card.innerHTML = `
-        <div class="show-thumb" style="background:linear-gradient(135deg, ${badgeColor}33, ${badgeColor}11)">
+        <div class="show-thumb" style="background:linear-gradient(135deg, ${badge.color}33, ${badge.color}11)">
           <span class="show-thumb-emoji">${s.emoji}</span>
-          <span class="show-platform-badge" style="background:${badgeColor}">${platformLabel}</span>
+          <span class="show-platform-badge" style="background:${badge.color}">${badge.label}</span>
         </div>
         <span class="v-title">${s.title}</span>
       `;

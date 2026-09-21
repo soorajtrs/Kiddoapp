@@ -12,6 +12,21 @@
 
 <div id="decor-layer" aria-hidden="true"></div>
 
+<!-- Persistent voice assistant - floating on every screen -->
+<button id="agent-fab" class="agent-fab" aria-label="Voice Buddy">🎙️</button>
+<div id="agent-modal" class="agent-modal hidden">
+  <div class="agent-modal-card">
+    <button id="agent-modal-close" class="agent-modal-close" aria-label="Close">✕</button>
+    <div class="agent-stage">
+      <button id="agent-mic" class="agent-mic">🎙️</button>
+      <p id="agent-hint" class="agent-hint">What would you like to do?</p>
+      <p id="agent-transcript" class="agent-transcript"></p>
+      <p id="agent-reply" class="agent-reply"></p>
+      <button id="agent-goto-settings" class="chip-btn hidden">⚙️ Go to Settings</button>
+    </div>
+  </div>
+</div>
+
 <div id="app">
 
   <p id="voice-notice" class="voice-notice hidden">
@@ -55,9 +70,6 @@
       </button>
       <button class="menu-card" data-target="screen-read" style="--card-color:#FF8FAB">
         <span class="menu-emoji">📖</span><span>വായിക്കാം<br>Read</span>
-      </button>
-      <button class="menu-card" data-target="screen-agent" style="--card-color:#33334D">
-        <span class="menu-emoji">🎙️</span><span>Voice Buddy<br><small>Ask me!</small></span>
       </button>
     </nav>
   </section>
@@ -153,9 +165,11 @@
       <h2>Movies &amp; Shows</h2>
     </header>
     <p class="shows-note">
-      These open Netflix or Prime Video in a new tab, where you sign in yourself —
-      this app never sees or stores your login. Pick a show together, then hand
-      the screen to your kid. 👨‍👩‍👧
+      These open the show's real streaming page in a new tab - Netflix, Prime
+      Video, or a "where to watch" page when a title is on another service or
+      its platform has changed - where you sign in yourself. This app never
+      sees or stores your login. Pick a show together, then hand the screen
+      to your kid. 👨‍👩‍👧
     </p>
     <div class="tabs" id="shows-tabs"></div>
     <div class="video-list" id="shows-grid"></div>
@@ -217,20 +231,6 @@
         <button id="settings-key-clear" class="chip-btn">Clear</button>
       </div>
       <p id="settings-key-status" class="settings-hint"></p>
-    </div>
-  </section>
-
-  <!-- VOICE AGENT SCREEN -->
-  <section id="screen-agent" class="screen">
-    <header class="bar">
-      <button class="back-btn" data-target="screen-home">⬅ Home</button>
-      <h2>🎙️ Voice Buddy</h2>
-    </header>
-    <div class="agent-stage">
-      <button id="agent-mic" class="agent-mic">🎙️</button>
-      <p id="agent-hint" class="agent-hint">Tap the mic and ask for something - "letters", "videos", "puzzle"...</p>
-      <p id="agent-transcript" class="agent-transcript"></p>
-      <p id="agent-reply" class="agent-reply"></p>
     </div>
   </section>
 

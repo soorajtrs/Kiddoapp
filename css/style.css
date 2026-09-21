@@ -459,14 +459,58 @@ html, body {
   font-size: 1rem;
 }
 
-/* VOICE AGENT */
-.agent-stage {
+/* VOICE AGENT - persistent Siri-style floating button + popup */
+.agent-fab {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 50;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  animation: fab-breathe 3s ease-in-out infinite;
+}
+@keyframes fab-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+.agent-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.agent-modal.hidden { display: none; }
+.agent-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
   background: white;
   border-radius: var(--radius);
   padding: 30px 20px;
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+.agent-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: #eee;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.agent-stage { text-align: center; }
 .agent-mic {
   border: none;
   border-radius: 50%;
@@ -484,5 +528,6 @@ html, body {
 .agent-hint { color: #888; margin-top: 16px; }
 .agent-transcript { font-style: italic; color: #555; margin-top: 10px; }
 .agent-reply { font-size: 1.2rem; font-weight: 700; color: var(--accent); margin-top: 10px; }
+#agent-goto-settings { margin-top: 16px; }
 .page-dots span { width: 8px; height: 8px; border-radius: 50%; background: #ddd; display: inline-block; }
 .page-dots span.active { background: #FF6B6B; }

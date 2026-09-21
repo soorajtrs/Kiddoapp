@@ -4,7 +4,7 @@
     'screen-english': 'English letters and writing practice',
     'screen-words': 'Malayalam vocabulary words',
     'screen-videos': 'educational videos',
-    'screen-shows': 'Movies and Shows (Netflix/Prime)',
+    'screen-shows': 'Movies and Shows (Netflix/Prime/Hotstar)',
     'screen-puzzle': 'memory match puzzle game',
     'screen-draw': 'drawing pad',
     'screen-read': 'stories and PDF read-aloud',
@@ -91,30 +91,32 @@
     return { reply, target: target !== 'none' && SCREENS[target] ? target : null };
   }
 
-  function initAgentScreen() {
+  function initAgentUI() {
+    const fab = document.getElementById('agent-fab');
+    const modal = document.getElementById('agent-modal');
+    const closeBtn = document.getElementById('agent-modal-close');
+    const settingsBtn = document.getElementById('agent-goto-settings');
     const micBtn = document.getElementById('agent-mic');
     const hint = document.getElementById('agent-hint');
     const transcriptEl = document.getElementById('agent-transcript');
     const replyEl = document.getElementById('agent-reply');
-    if (!micBtn) return;
+    if (!fab) return;
 
     let recognition = null;
     let listening = false;
 
     function setHint(text) { hint.textContent = text; }
 
-    micBtn.addEventListener('click', () => {
-      if (!isAgentConfigured()) {
-        setHint('Set up Gemini or a Local LLM in Settings first, then come back and tap the mic.');
-        return;
-      }
-      if (!recognition) recognition = getRecognition();
-      if (!recognition) {
-        setHint("This browser can't listen for speech. Try Chrome on Android or desktop.");
-        return;
-      }
-      if (listening) { recognition.stop(); return; }
+    function stopListening() {
+      if (recognition && listening) recognition.stop();
+    }
 
+    function closeModal() {
+      stopListening();
+      modal.classList.add('hidden');
+    }
+
+    function startListening() {
       transcriptEl.textContent = '';
       replyEl.textContent = '';
       setHint('Listening... 🎧');
@@ -130,32 +132,48 @@
           replyEl.textContent = reply;
           speakEnglish(reply);
           setHint('Tap the mic to ask again.');
-          if (target) setTimeout(() => showScreen(target), 1800);
+          if (target) setTimeout(() => { closeModal(); showScreen(target); }, 1600);
         } catch (err) {
           replyEl.textContent = "I couldn't reach my AI brain - check the setup in Settings and your internet.";
           setHint('Tap the mic to try again.');
         }
       };
-      recognition.onerror = () => {
-        setHint('Tap the mic to try again.');
-      };
-      recognition.onend = () => {
-        listening = false;
-        micBtn.classList.remove('listening');
-      };
+      recognition.onerror = () => setHint('Tap the mic to try again.');
+      recognition.onend = () => { listening = false; micBtn.classList.remove('listening'); };
       recognition.start();
-    });
+    }
 
-    document.addEventListener('screen:show', e => {
-      if (e.detail.id === 'screen-agent') {
-        if (!isAgentConfigured()) setHint('Set up Gemini or a Local LLM in Settings first, then come back and tap the mic.');
-        else if (!getRecognition()) setHint("This browser can't listen for speech. Try Chrome on Android or desktop.");
-        else setHint('Tap the mic and ask for something - "letters", "videos", "puzzle"...');
-      } else if (recognition && listening) {
-        recognition.stop();
+    function openModal() {
+      transcriptEl.textContent = '';
+      replyEl.textContent = '';
+      settingsBtn.classList.add('hidden');
+      modal.classList.remove('hidden');
+
+      if (!isAgentConfigured()) {
+        setHint('Set up Gemini or a Local LLM in Settings first.');
+        settingsBtn.classList.remove('hidden');
+        return;
       }
+      if (!recognition) recognition = getRecognition();
+      if (!recognition) {
+        setHint("This browser can't listen for speech. Try Chrome on Android or desktop.");
+        return;
+      }
+      setHint('What would you like to do?');
+      startListening();
+    }
+
+    fab.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    micBtn.addEventListener('click', () => {
+      if (listening) { stopListening(); return; }
+      if (recognition) startListening();
     });
+    settingsBtn.addEventListener('click', () => { closeModal(); showScreen('screen-settings'); });
+
+    document.addEventListener('screen:show', () => closeModal());
   }
 
-  document.addEventListener('DOMContentLoaded', initAgentScreen);
+  document.addEventListener('DOMContentLoaded', initAgentUI);
 })();
