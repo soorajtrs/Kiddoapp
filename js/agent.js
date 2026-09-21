@@ -138,9 +138,23 @@
           setHint('Tap the mic to try again.');
         }
       };
-      recognition.onerror = () => setHint('Tap the mic to try again.');
+      recognition.onerror = (e) => {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+          setHint("Microphone access is blocked here. If you're viewing this inside a chat preview, open the app's own page/link directly and allow the microphone.");
+        } else if (e.error === 'no-speech') {
+          setHint("Didn't catch that - tap the mic and try again.");
+        } else {
+          setHint('Tap the mic to try again.');
+        }
+      };
       recognition.onend = () => { listening = false; micBtn.classList.remove('listening'); };
-      recognition.start();
+      try {
+        recognition.start();
+      } catch (err) {
+        setHint('Microphone access is blocked here. Try opening the app directly instead of a chat preview.');
+        listening = false;
+        micBtn.classList.remove('listening');
+      }
     }
 
     function openModal() {
