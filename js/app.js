@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => showScreen(btn.dataset.target));
   });
   initProfiles();
+  initSettings();
 });
 
 // ---- Profiles ---------------------------------------------------------
@@ -78,6 +79,51 @@ function withRecommendations(items) {
     .map(item => ({ item, hit: (item.tags || []).some(t => interests.includes(t)) }))
     .sort((a, b) => b.hit - a.hit)
     .map(({ item, hit }) => Object.assign({}, item, { recommended: hit }));
+}
+
+// Drops items whose ageMin is above the active profile's set age (nothing
+// they're not old enough for yet). Items without an ageMin pass through -
+// age rating only applies where we curated one (Movies & Shows).
+function filterByAge(items) {
+  const age = getProfileAge();
+  return items.filter(item => item.ageMin === undefined || item.ageMin <= age);
+}
+
+// ---- Age setting (Settings screen) -------------------------------------
+// Each profile remembers its own age, so switching Girl/Boy also switches
+// which shows are age-appropriate for that kid as they grow.
+const DEFAULT_AGE = 4;
+const MIN_AGE = 2;
+const MAX_AGE = 10;
+
+function getProfileAge(id) {
+  id = id || getActiveProfile().id;
+  let age;
+  try { age = parseInt(localStorage.getItem('kp_age_' + id), 10); } catch (e) { age = NaN; }
+  return Number.isFinite(age) ? age : DEFAULT_AGE;
+}
+
+function setProfileAge(id, age) {
+  age = Math.max(MIN_AGE, Math.min(MAX_AGE, age));
+  try { localStorage.setItem('kp_age_' + id, String(age)); } catch (e) { /* ignore */ }
+  document.dispatchEvent(new CustomEvent('profile:change', { detail: { id, age } }));
+  return age;
+}
+
+function initSettings() {
+  const ageValue = document.getElementById('settings-age-value');
+  const ageMinus = document.getElementById('settings-age-minus');
+  const agePlus = document.getElementById('settings-age-plus');
+  if (!ageValue || !ageMinus || !agePlus) return;
+
+  function refresh() {
+    ageValue.textContent = getProfileAge();
+    document.getElementById('settings-profile-name').textContent = getActiveProfile().name;
+  }
+  ageMinus.addEventListener('click', () => { setProfileAge(getActiveProfile().id, getProfileAge() - 1); refresh(); });
+  agePlus.addEventListener('click', () => { setProfileAge(getActiveProfile().id, getProfileAge() + 1); refresh(); });
+  document.addEventListener('screen:show', e => { if (e.detail.id === 'screen-settings') refresh(); });
+  document.addEventListener('profile:change', refresh);
 }
 
 // Shared speech helper - prefers a Malayalam voice. Most devices don't have

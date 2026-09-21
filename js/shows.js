@@ -50,7 +50,11 @@
   function renderGrid() {
     const grid = document.getElementById('shows-grid');
     grid.innerHTML = '';
-    const ranked = withRecommendations(SHOW_CATEGORIES[currentCat]);
+    const ranked = withRecommendations(filterByAge(SHOW_CATEGORIES[currentCat]));
+    if (ranked.length === 0) {
+      grid.appendChild(sectionLabel(`Nothing here yet for age ${getProfileAge()} - try another tab, or raise the age in Settings.`));
+      return;
+    }
     let labeledRecommended = false;
     let labeledMore = false;
     ranked.forEach(s => {

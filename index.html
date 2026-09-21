@@ -20,9 +20,12 @@
 
   <!-- HOME SCREEN -->
   <section id="screen-home" class="screen active">
-    <div id="profile-picker" class="profile-picker">
-      <button class="profile-btn" data-profile="girl">🦄 <span>Girl</span></button>
-      <button class="profile-btn" data-profile="boy">🦖 <span>Boy</span></button>
+    <div class="profile-row">
+      <div id="profile-picker" class="profile-picker">
+        <button class="profile-btn" data-profile="girl">🦄 <span>Girl</span></button>
+        <button class="profile-btn" data-profile="boy">🦖 <span>Boy</span></button>
+      </div>
+      <button class="settings-btn" data-target="screen-settings" aria-label="Settings">⚙️</button>
     </div>
     <header class="home-header">
       <h1><span class="emoji">🧒</span> കുട്ടി പഠനം <span class="sub">Kutty Padam</span></h1>
@@ -153,6 +156,27 @@
     </p>
     <div class="tabs" id="shows-tabs"></div>
     <div class="video-list" id="shows-grid"></div>
+  </section>
+
+  <!-- SETTINGS SCREEN -->
+  <section id="screen-settings" class="screen">
+    <header class="bar">
+      <button class="back-btn" data-target="screen-home">⬅ Home</button>
+      <h2>⚙️ Settings</h2>
+    </header>
+    <div class="settings-card">
+      <p class="settings-label">Age for <b id="settings-profile-name">this profile</b></p>
+      <div class="age-stepper">
+        <button id="settings-age-minus" class="round-btn">−</button>
+        <span id="settings-age-value" class="age-value">4</span>
+        <button id="settings-age-plus" class="round-btn">+</button>
+      </div>
+      <p class="settings-hint">
+        Movies &amp; Shows are filtered to what's age-appropriate. Raise this as
+        your child grows to unlock more shows; each profile (Girl/Boy) has its
+        own age, so siblings each see what's right for them.
+      </p>
+    </div>
   </section>
 
   <!-- PUZZLE SCREEN -->

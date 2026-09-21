@@ -46,11 +46,29 @@ html, body {
 #app { position: relative; z-index: 1; }
 
 /* Profile picker */
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  position: relative;
+}
 .profile-picker {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 6px;
+}
+.settings-btn {
+  position: absolute;
+  right: 0;
+  border: none;
+  background: #eee;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 .profile-btn {
   border: none;
@@ -411,5 +429,23 @@ html, body {
   white-space: pre-wrap;
 }
 .pdf-page-info { text-align: center; color: #999; font-size: .85rem; margin-top: 10px; }
+
+/* SETTINGS */
+.settings-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+.settings-label { font-size: 1.1rem; margin: 0 0 12px; }
+.age-stepper { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.age-value {
+  font-family: 'Baloo Chettan 2', sans-serif;
+  font-size: 3rem;
+  color: var(--accent);
+  min-width: 60px;
+}
+.settings-hint { color: #888; font-size: .9rem; margin-top: 18px; line-height: 1.5; }
 .page-dots span { width: 8px; height: 8px; border-radius: 50%; background: #ddd; display: inline-block; }
 .page-dots span.active { background: #FF6B6B; }

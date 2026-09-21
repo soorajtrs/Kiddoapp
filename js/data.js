@@ -159,25 +159,28 @@ function primeSearch(title) {
   return `https://www.amazon.com/s?k=${encodeURIComponent(title)}&i=instant-video`;
 }
 
+// ageMin/ageMax are the general audience-rating consensus for each show
+// (TV-Y / TV-Y7 style guidance) - used to filter out anything not yet
+// age-appropriate for the active profile's set age.
 const SHOW_CATEGORIES = {
   "Shows for age 4": [
-    { title: "Bluey", emoji: "🐶", platform: "netflix", tags: ["family", "animals", "adventure"] },
-    { title: "CoComelon", emoji: "🚜", platform: "netflix", tags: ["music", "vehicles"] },
-    { title: "Peppa Pig", emoji: "🐷", platform: "netflix", tags: ["family", "animals"] },
-    { title: "Ada Twist, Scientist", emoji: "🔬", platform: "netflix", tags: ["science", "adventure"] },
-    { title: "Gabby's Dollhouse", emoji: "🏠", platform: "netflix", tags: ["fantasy", "magic", "princess"] },
-    { title: "Word Party", emoji: "🎉", platform: "netflix", tags: ["animals", "music"] },
+    { title: "Bluey", emoji: "🐶", platform: "netflix", tags: ["family", "animals", "adventure"], ageMin: 2, ageMax: 8 },
+    { title: "CoComelon", emoji: "🚜", platform: "netflix", tags: ["music", "vehicles"], ageMin: 1, ageMax: 4 },
+    { title: "Peppa Pig", emoji: "🐷", platform: "netflix", tags: ["family", "animals"], ageMin: 2, ageMax: 6 },
+    { title: "Ada Twist, Scientist", emoji: "🔬", platform: "netflix", tags: ["science", "adventure"], ageMin: 4, ageMax: 8 },
+    { title: "Gabby's Dollhouse", emoji: "🏠", platform: "netflix", tags: ["fantasy", "magic", "princess"], ageMin: 3, ageMax: 7 },
+    { title: "Word Party", emoji: "🎉", platform: "netflix", tags: ["animals", "music"], ageMin: 1, ageMax: 4 },
   ],
   "Prime Video picks": [
-    { title: "Pete the Cat", emoji: "🐱", platform: "prime", tags: ["animals", "music"] },
-    { title: "Dinotrux", emoji: "🦕", platform: "prime", tags: ["dinosaur", "vehicles", "action"] },
-    { title: "Wishenpoof", emoji: "✨", platform: "prime", tags: ["fantasy", "magic", "unicorn"] },
-    { title: "The Stinky and Dirty Show", emoji: "🚚", platform: "prime", tags: ["vehicles", "adventure"] },
+    { title: "Pete the Cat", emoji: "🐱", platform: "prime", tags: ["animals", "music"], ageMin: 3, ageMax: 8 },
+    { title: "Dinotrux", emoji: "🦕", platform: "prime", tags: ["dinosaur", "vehicles", "action"], ageMin: 4, ageMax: 9 },
+    { title: "Wishenpoof", emoji: "✨", platform: "prime", tags: ["fantasy", "magic", "unicorn"], ageMin: 2, ageMax: 6 },
+    { title: "The Stinky and Dirty Show", emoji: "🚚", platform: "prime", tags: ["vehicles", "adventure"], ageMin: 2, ageMax: 5 },
   ],
   "Malayalam & Indian": [
-    { title: "Chhota Bheem", emoji: "💪", platform: "prime", tags: ["adventure", "action"] },
-    { title: "Motu Patlu", emoji: "😄", platform: "prime", tags: ["adventure", "action"] },
-    { title: "Mighty Little Bheem", emoji: "👶", platform: "netflix", tags: ["family", "adventure"] },
+    { title: "Chhota Bheem", emoji: "💪", platform: "prime", tags: ["adventure", "action"], ageMin: 5, ageMax: 10 },
+    { title: "Motu Patlu", emoji: "😄", platform: "prime", tags: ["adventure", "action"], ageMin: 5, ageMax: 10 },
+    { title: "Mighty Little Bheem", emoji: "👶", platform: "netflix", tags: ["family", "adventure"], ageMin: 1, ageMax: 5 },
   ],
 };
 
